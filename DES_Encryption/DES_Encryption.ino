@@ -30,21 +30,24 @@ int getBitAtPosition(const uint8_t *array, int position){
   return (array[(position/8)] & (0x80 >> position%8)) ? 1 : 0;
 }
 
+void permutation(const uint8_t *table, const uint8_t *input, uint8_t *output, int outputSize){
+
+    for(int i = 0;i<outputSize;i++)
+      setBitAtPosition(output, i, getBitAtPosition(input,table[i]-1)); //Because FUCKING offset
+    
+     
+}
+
 void setup() {
   Serial.begin(9600);
   
   /////////////////////////Initial permutation
-  for(int i = 0;i<4;i++){
-    for(int j = 0;j<8;j++){
-      setBitAtPosition(Ln,i*8+j,getBitAtPosition(plaintext,ip_permtab[i*8+j]-1)); //Because FUCKING offset
-    }
-  }
-  for(int i = 0;i<4;i++){
-    for(int j = 0;j<8;j++){
-      setBitAtPosition(Rn,i*8+j,getBitAtPosition(plaintext,ip_permtab[32 + (i*8+j)]-1)); //Because FUCKING offset
-    }
-  }
+  uint8_t tempPerm[8];
+  permutation(ip_permtab, plaintext, tempPerm, 64);
 
+  memcpy(Ln, tempPerm, 4);
+  memcpy(Rn, tempPerm+4, 4);
+  
   Serial.println("Ln :");
   for(int i = 0;i<4;i++){
     Serial.println(Ln[i]);
@@ -55,7 +58,7 @@ void setup() {
     Serial.println(Rn[i]);
   }
   
-  //CODE HERE
+  //////////////////////////////CODE HERE
   
 
 }
