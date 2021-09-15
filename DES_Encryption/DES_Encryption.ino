@@ -17,39 +17,31 @@ uint8_t Rn[4];
 void setBitAtPosition(uint8_t *array, int position, int value){
 
   if(value){
-    array[position/8] |= (0x01 << position%8);
+    array[position/8] |= (0x80 >> position%8);
   }else{
-    array[position/8] &= (0xFE << position%8);
+    array[position/8] &= (0x7F >> position%8);
   }
 
 }
 
 int getBitAtPosition(uint8_t *array, int position){
-  return (array[(position/8)] & (1 << position%8)) ? 1 : 0;
+  return (array[(position/8)] & (0x80 >> position%8)) ? 1 : 0;
 }
  
 
 void setup() {
-
+  Serial.begin(9600);
+  
   /////////////////////////Initial permutation
-  //For Left side
-  uint8_t currentByte = 0;
-  int LnIndex = 0;
-  int RnIndex = 0;
-  
-  for(int i = 0;i<32;i++){
-    currentByte = (currentByte << 1) + ((plaintext[ip_permtab[i/8]] & 1 << (ip_permtab[i]%8)) ? 1 : 0);
+  uint8_t testArray[] = {0,0,0,0};
 
-    if(!(i%8) && i>0){
-        Ln[LnIndex] = currentByte;
-        LnIndex++; 
-    }
+  setBitAtPosition(testArray,30,1);
+  Serial.println(getBitAtPosition(testArray,30));
+  Serial.println(getBitAtPosition(testArray,31));
     
-  }
-  
-  for(int i = 32;i<64;i++){
-    
-  }
+  for(int i = 0;i<4;i++)
+    Serial.println(testArray[i]);
+  Serial.println();
   
   //CODE HERE
   
