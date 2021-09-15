@@ -1,6 +1,7 @@
-const char plaintext[] = "HelloDES!";
+//const char plaintext[] = "HelloDES!";
+const uint8_t plaintext[] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 
-const uint8_t ip_permtab[] PROGMEM = {                               
+const uint8_t ip_permtab[] = {                               
         58, 50, 42, 34, 26, 18, 10, 2,
         60, 52, 44, 36, 28, 20, 12, 4,
         62, 54, 46, 38, 30, 22, 14, 6,
@@ -18,30 +19,41 @@ void setBitAtPosition(uint8_t *array, int position, int value){
 
   if(value){
     array[position/8] |= (0x80 >> position%8);
+    Serial.println("Putting 1");
   }else{
-    array[position/8] &= (0x7F >> position%8);
+    array[position/8] &= ~(0x80 >> position%8);
   }
 
 }
 
-int getBitAtPosition(uint8_t *array, int position){
+int getBitAtPosition(const uint8_t *array, int position){
   return (array[(position/8)] & (0x80 >> position%8)) ? 1 : 0;
 }
- 
 
 void setup() {
   Serial.begin(9600);
   
   /////////////////////////Initial permutation
-  uint8_t testArray[] = {0,0,0,0};
+  for(int i = 0;i<4;i++){
+    for(int j = 0;j<8;j++){
+      setBitAtPosition(Ln,i*8+j,getBitAtPosition(plaintext,ip_permtab[i*8+j]-1)); //Because FUCKING offset
+    }
+  }
+  for(int i = 0;i<4;i++){
+    for(int j = 0;j<8;j++){
+      setBitAtPosition(Rn,i*8+j,getBitAtPosition(plaintext,ip_permtab[32 + (i*8+j)]-1)); //Because FUCKING offset
+    }
+  }
 
-  setBitAtPosition(testArray,30,1);
-  Serial.println(getBitAtPosition(testArray,30));
-  Serial.println(getBitAtPosition(testArray,31));
-    
-  for(int i = 0;i<4;i++)
-    Serial.println(testArray[i]);
-  Serial.println();
+  Serial.println("Ln :");
+  for(int i = 0;i<4;i++){
+    Serial.println(Ln[i]);
+  }
+  
+  Serial.println("Rn :");
+  for(int i = 0;i<4;i++){
+    Serial.println(Rn[i]);
+  }
   
   //CODE HERE
   
