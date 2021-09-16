@@ -1,6 +1,6 @@
 #include "des_key_gen.h"
 
-unsigned char position[8] = {128, 64, 32, 16, 8, 4, 2, 1};
+u_int8_t position[8] = {128, 64, 32, 16, 8, 4, 2, 1};
 
 u_int8_t key_perm_C0[28] = {56, 48, 40, 32, 24, 16, 8, 0,
                             57, 49, 41, 33, 25, 17, 9, 1,
@@ -22,7 +22,7 @@ u_int8_t key_perm_box_2[48] = {13, 16, 10, 23, 0, 4,
                                45, 41, 49, 35, 28, 31};
 u_int8_t shift_array[16] = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
 
-void print_key_as_bits(unsigned char *key, int length) {
+void print_key_as_bits(u_int8_t *key, int length) {
   char char_to_print;
   for (int i = 0; i < length; i++)
   {
@@ -44,7 +44,7 @@ void print_key_as_bits(unsigned char *key, int length) {
   printf("\n");
 }
 
-void permutate_array(unsigned char *input_array, unsigned char *output_array, u_int8_t length, u_int8_t perm_box[]) {
+void permutate_array(u_int8_t *input_array, u_int8_t *output_array, u_int8_t length, u_int8_t perm_box[]) {
   u_int8_t newpos;
   u_int8_t desired_bit;
 
@@ -59,14 +59,14 @@ void permutate_array(unsigned char *input_array, unsigned char *output_array, u_
   }
 }
 
-unsigned char * left_bit_shift(unsigned char *key, int length, int shift) {
-  unsigned char *shifted_array = (unsigned char *) malloc (length);
+u_int8_t * left_bit_shift(u_int8_t *key, int length, int shift) {
+  u_int8_t *shifted_array = (u_int8_t *) malloc (length);
 
   for (u_int8_t i = 0; i < length; i++) {
     shifted_array[i] = key[i];
   }
 
-  unsigned char bits1 = 0, bits2 = shifted_array[0];
+  u_int8_t bits1 = 0, bits2 = shifted_array[0];
   for(int i = length-1; i >= 0; i--) {
     bits1 = shifted_array[i] & 0xFF;
     shifted_array[i] <<= shift;
@@ -80,18 +80,18 @@ unsigned char * left_bit_shift(unsigned char *key, int length, int shift) {
   return shifted_array;
 }
 
-unsigned char * generate_key(unsigned char key[], u_int8_t round) {
-  unsigned char *C0 = (unsigned char *) malloc (4);
-  unsigned char *D0 = (unsigned char *) malloc (4);
+u_int8_t * generate_key(u_int8_t key[], u_int8_t round) {
+  u_int8_t *C0 = (u_int8_t *) malloc (4);
+  u_int8_t *D0 = (u_int8_t *) malloc (4);
 
   permutate_array(key, C0, 28, key_perm_C0);
   permutate_array(key, D0, 28, key_perm_D0);
 
-  unsigned char *C_prev = C0;
-  unsigned char *D_prev = D0;
+  u_int8_t *C_prev = C0;
+  u_int8_t *D_prev = D0;
 
-  unsigned char *Ci = NULL;
-  unsigned char *Di = NULL;
+  u_int8_t *Ci = NULL;
+  u_int8_t *Di = NULL;
 
   for (u_int8_t i = 0; i < round; i++) {
     Ci = left_bit_shift(C_prev, 4, shift_array[i]);
@@ -104,7 +104,7 @@ unsigned char * generate_key(unsigned char key[], u_int8_t round) {
     D_prev = Di;
   }
 
-  unsigned char * cd_array = (unsigned char *) malloc (7);
+  u_int8_t * cd_array = (u_int8_t *) malloc (7);
 
   for (u_int8_t j = 0; j < 7; j++) {
     if (j < 3) {
@@ -122,7 +122,7 @@ unsigned char * generate_key(unsigned char key[], u_int8_t round) {
   free(Ci);
   free(Di);
 
-  unsigned char * new_key = (unsigned char *) malloc (48);
+  u_int8_t * new_key = (u_int8_t *) malloc (48);
   permutate_array(cd_array, new_key, 48, key_perm_box_2);
 
   free(cd_array);
@@ -132,11 +132,11 @@ unsigned char * generate_key(unsigned char key[], u_int8_t round) {
 
 int main (int argc, char *argv[]) {
   u_int8_t round = 10;
-  unsigned char initial_key[8] = {'B', 'a', 'N', 'A', 'n', 'a', '6', '4'};
+  u_int8_t initial_key[8] = {'B', 'a', 'N', 'A', 'n', 'a', '6', '4'};
 
   print_key_as_bits(initial_key, 8);
 
-  unsigned char * new_key;
+  u_int8_t * new_key;
   new_key = generate_key(initial_key, round);
 
   print_key_as_bits(new_key, 6);
