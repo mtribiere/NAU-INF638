@@ -142,20 +142,30 @@ const uint8_t pboxPermutationTable[32] = {
 };
 
 // Consider input from Ri (32-bit) as:
-uint8_t ri[32] = {1, 0, 1, 1, 0, 1, 1, 0,
+uint8_t r[32] = {1, 0, 1, 1, 0, 1, 1, 0,
                  1, 0, 0, 0, 1, 1, 1, 1,
                  1, 0, 1, 0, 0, 1, 0, 0,
                  1, 1, 0, 1, 1, 1, 0, 0};
 
 // 32-bit input -> Expansion permutation -> 48-bit output
-uint8_t expansionPermutation(uint8_t r[]) {      
+uint8_t expansionPermutation(uint8_t arr[]) {      
   uint8_t *expandedArray;
-  expandedArray = (uint8_t *) malloc (48 * sizeof(uint8_t));
-  for(int i = 0 ; i < sizeof(expansionPermutationTable); i++)
+  expandedArray = (uint8_t *) malloc(48 * sizeof(uint8_t));
+  for(int i = 0; i < sizeof(expansionPermutationTable); i++)
   {
-    expandedArray[i] = r[expansionPermutationTable[i]-1];
+    expandedArray[i] = arr[expansionPermutationTable[i]-1];
   }   
   return expandedArray;
+}
+
+uint8_t pboxPermutation(uint8_t arr[]) {      
+  uint8_t *permutedArray;
+  permutedArray = (uint8_t *) malloc(32 * sizeof(uint8_t));
+  for(int i = 0; i < sizeof(pboxPermutationTable); i++)
+  {
+    permutedArray[i] = arr[pboxPermutationTable[i]-1];
+  }   
+  return permutedArray;
 }
 
 #endif
