@@ -3,6 +3,9 @@
 #include <cstring>
 #include <sstream>
 /**
+#include <algorithm>
+// Use for copying array data, in case required:
+// std::copy(std::begin(arr1), std::end(arr1), std::begin(arr2));
 #include <bitset>
 // Use for debugging output in sets of 8 (I ordered every table below row-wise in sets of 8 as well)
 **/
@@ -217,7 +220,7 @@ int convertBinaryToDecimal(std::string binary)
   return decimal;
 }
 
-uint8_t expansionPermutation(uint8_t arr[]) {      
+uint8_t* expansionPermutation(uint8_t *arr) {      
   uint8_t *expandedArray;
   expandedArray = (uint8_t *) malloc(sizeof(expansionPermutationTable) * sizeof(uint8_t));
   for(int i = 0; i < sizeof(expansionPermutationTable); i++)
@@ -227,7 +230,7 @@ uint8_t expansionPermutation(uint8_t arr[]) {
   return expandedArray;
 }
 
-uint8_t XOR(uint8_t arr[], uint8_t key[]) {
+uint8_t* XOR(uint8_t *arr, uint8_t *key) {
   for(int i = 0; i < 48; i++)
   {
     arr[i] = arr[i] ^ key[i];
@@ -235,7 +238,7 @@ uint8_t XOR(uint8_t arr[], uint8_t key[]) {
   return arr;      
 }        
 
-uint8_t sBoxSubstitution(uint8_t arr[]) {
+uint8_t* sBoxSubstitution(uint8_t *arr) {
   // Convert uint8_t array into a string: (using ostringstream from sstream)
   std::ostringstream convert;
   for (int i = 0; i < 48; i++) 
@@ -264,7 +267,7 @@ uint8_t sBoxSubstitution(uint8_t arr[]) {
   return finalSubstitutedArray;
 }
 
-uint8_t pboxPermutation(uint8_t arr[]) {
+uint8_t* pboxPermutation(uint8_t *arr) {
   uint8_t *permutedArray;
   permutedArray = (uint8_t *) malloc(sizeof(pboxPermutationTable) * sizeof(uint8_t));
   for(int i = 0; i < sizeof(pboxPermutationTable); i++)
@@ -274,19 +277,17 @@ uint8_t pboxPermutation(uint8_t arr[]) {
   return permutedArray;
 }
 
-/**
-uint8_t ffunction(uint8_t r[], uint8_t key[]) {
-  // uint8_t expandedArray[32];
+uint8_t* ffunction(uint8_t *r, uint8_t *key) {
+  uint8_t expandedArray[48], xoredArray[48], substitutedArray[32], permutatedArray[32];
   // 32-bit input -> Expansion permutation -> 48-bit output
-  // expandedArray = expansionPermutation(r);  
+  uint8_t* expandedArray = expansionPermutation(r);
   // 48-bit inputs -> XOR -> 48-bit output
-  // xoredArray = XOR(expandedArray, key)
+  uint8_t* xoredArray = XOR(expandedArray, key);
   // 48-bit input -> S-Box -> 32-bit output
-  // sBoxSubstitution = sBoxSubstitution(xoredArray)
-  // 32-bit input -> P-Box permutation -> 32-bit output  
-  // finalArray = pboxPermutation(sBox)
-  // return finalArray
+  uint8_t* substitutedArray = sBoxSubstitution(xoredArray);
+  // 32-bit input -> P-Box permutation -> 32-bit output
+  uint8_t* permutatedArray = pboxPermutation(substitutedArray);
+  return permutatedArray;
 }        
-**/
 
 #endif
