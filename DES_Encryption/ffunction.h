@@ -1,3 +1,6 @@
+// Include for using uint8_t - discard/remove if you're using in another import or header file.
+#include <stdint.h>
+
 // Include guards:
 #ifndef FFUNCTION_H
 #define FFUNCTION_H
@@ -137,5 +140,22 @@ const uint8_t pboxPermutationTable[32] = {
         2, 8, 24, 14, 32, 27, 3, 9, 
         19, 13, 30, 6, 22, 11, 4, 25
 };
+
+// Consider input from Ri (32-bit) as:
+uint8_t r[32] = {1, 0, 1, 1, 0, 1, 1, 0,
+                 1, 0, 0, 0, 1, 1, 1, 1,
+                 1, 0, 1, 0, 0, 1, 0, 0,
+                 1, 1, 0, 1, 1, 1, 0, 0};
+
+// 32-bit input -> Expansion permutation -> 48-bit output
+// void expansionPermutation(...) -> might make a func. 
+ uint8_t *expandedArray;
+ expandedArray = (uint8_t *) malloc (48 * sizeof(uint8_t));
+ 
+ for(int i = 0 ; i < sizeof(expansionPermutationTable); i++)
+ {
+     expandedArray[i] = r[expansionPermutationTable[i]-1];
+ }
+// return expandedArray (48) 
 
 #endif
