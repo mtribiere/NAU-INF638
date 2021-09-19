@@ -1,9 +1,17 @@
-// Include for using uint8_t - discard/remove if you're using in another import or header file.
-#include <stdint.h>
+// Include the header below for using uint8_t - discard/remove if you're using in another import or header file.
+#include <cstdint>
+#include <cstring>
 
 // Include guards:
 #ifndef FFUNCTION_H
 #define FFUNCTION_H
+
+/** Considering 32-bit input from Ri:
+uint8_t r[32] = {1, 0, 1, 1, 0, 1, 1, 0,
+                 1, 0, 0, 0, 1, 1, 1, 1,
+                 1, 0, 1, 0, 0, 1, 0, 0,
+                 1, 1, 0, 1, 1, 1, 0, 0};
+**/
 
 const uint8_t sboxTable[8][64] = {
         {
@@ -173,11 +181,36 @@ const uint8_t pboxPermutationTable[32] = {
         19, 13, 30, 6, 22, 11, 4, 25
 };
 
-// Consider input from Ri (32-bit) as:
-uint8_t r[32] = {1, 0, 1, 1, 0, 1, 1, 0,
-                 1, 0, 0, 0, 1, 1, 1, 1,
-                 1, 0, 1, 0, 0, 1, 0, 0,
-                 1, 1, 0, 1, 1, 1, 0, 0};
+std::string convertDecimalToBinary(int decimal)
+{
+    std::string binary;
+    while(decimal != 0) 
+    {
+      binary = (decimal % 2 == 0 ? "0" : "1") + binary; 
+      decimal = decimal / 2;
+    }
+    while(binary.length() < 4)
+    {
+      binary = "0" + binary;
+    }
+    return binary;
+    // For printing, use cout or string.c_str()
+}
+
+int convertBinaryToDecimal(std::string binary)
+{
+    int decimal = 0, counter = 0;
+    int size = binary.length();
+    for(int i = size - 1; i >= 0; i--)
+    {
+      if(binary[i] == '1') 
+      {
+        decimal += counter * counter;
+      }
+      counter++;
+    }
+    return decimal;
+}
 
 uint8_t expansionPermutation(uint8_t arr[]) {      
   uint8_t *expandedArray;
@@ -197,7 +230,13 @@ uint8_t XOR(uint8_t arr[], uint8_t key[]) {
   return arr;      
 }        
 
-uint8_t pboxPermutation(uint8_t arr[]) {      
+/**
+uint8_t sBoxSubstitution(uint8_t arr[]) {   
+
+}
+**/
+
+uint8_t pboxPermutation(uint8_t arr[]) {
   uint8_t *permutedArray;
   permutedArray = (uint8_t *) malloc(sizeof(pboxPermutationTable) * sizeof(uint8_t));
   for(int i = 0; i < sizeof(pboxPermutationTable); i++)
@@ -209,12 +248,13 @@ uint8_t pboxPermutation(uint8_t arr[]) {
 
 /**
 uint8_t ffunction(uint8_t r[], uint8_t key[]) {
+  // uint8_t expandedArray[32];
   // 32-bit input -> Expansion permutation -> 48-bit output
   // expandedArray = expansionPermutation(r);  
   // 48-bit inputs -> XOR -> 48-bit output
   // xoredArray = XOR(expandedArray, key)
   // 48-bit input -> S-Box -> 32-bit output
-  // sBox = sBox(xoredArray)
+  // sBoxSubstitution = sBoxSubstitution(xoredArray)
   // 32-bit input -> P-Box permutation -> 32-bit output  
   // finalArray = pboxPermutation(sBox)
   // return finalArray
