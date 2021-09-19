@@ -1,6 +1,7 @@
 // Include the header below for using uint8_t - discard/remove if you're using in another import or header file.
 #include <cstdint>
 #include <cstring>
+#include <sstream>
 
 // Include guards:
 #ifndef FFUNCTION_H
@@ -13,7 +14,7 @@ uint8_t r[32] = {1, 0, 1, 1, 0, 1, 1, 0,
                  1, 1, 0, 1, 1, 1, 0, 0};
 **/
 
-const uint8_t sboxTable[8][64] = {
+const uint8_t sboxTable[8][4][16] = {
         {
         // S-box 1
                 14, 4, 13, 1, 2, 15, 11, 8, 
@@ -230,11 +231,32 @@ uint8_t XOR(uint8_t arr[], uint8_t key[]) {
   return arr;      
 }        
 
-/**
-uint8_t sBoxSubstitution(uint8_t arr[]) {   
-
+uint8_t sBoxSubstitution(uint8_t arr[]) {
+  // Convert uint8_t array into a string: (using ostringstream from sstream)
+  std::ostringstream convert;
+  for (int i = 0; i < 48; i++) 
+  {
+    convert << (int)arr[i];
+  }
+  std::string expandedString = convert.str();
+  std::string substitutedArray = ""; // To store the 32-bit end result (needs conversion back to uint8_t)
+  // Iterate through eight 6-bit segments: (48)
+  for(int i = 0; i < 8; i++)
+  { // Concatenating the extreme 2 bits from a set of 6 to obtain the row:
+    std::string row = expandedString.substr(i * 6, 1) + expandedString.substr(i * 6 + 5, 1);
+    int convertedRow = convertBinaryToDecimal(row);
+    // Concatenating the middle 4 bits from a set of 6 to obtain the column:
+    std::string col = expandedString.substr(i * 6 + 1, 1) + expandedString.substr(i * 6 + 2, 1) + expandedString.substr(i * 6 + 3, 1) + expandedString.substr(i * 6 + 4, 1);
+		int convertedCol = convertBinaryToDecimal(col);
+		int resultantValue = substition_boxes[i][convertedRow][convertedCol];
+		substitutedArray += convertDecimalToBinary(resultantValue);  
+  }
+  // Convert std::string back to uint8_t array
+  return substitutedArray;
 }
-**/
+
+std::string key_string = convert.str();
+}
 
 uint8_t pboxPermutation(uint8_t arr[]) {
   uint8_t *permutedArray;
