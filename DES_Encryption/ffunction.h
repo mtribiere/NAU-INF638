@@ -189,6 +189,14 @@ uint8_t expansionPermutation(uint8_t arr[]) {
   return expandedArray;
 }
 
+uint8_t XOR(uint8_t arr[], uint8_t key[]) {
+  for(int i = 0; i < 48; i++)
+  {
+    arr[i] = arr[i] ^ key[i];
+  }        
+  return arr;      
+}        
+
 uint8_t pboxPermutation(uint8_t arr[]) {      
   uint8_t *permutedArray;
   permutedArray = (uint8_t *) malloc(sizeof(pboxPermutationTable) * sizeof(uint8_t));
@@ -200,11 +208,13 @@ uint8_t pboxPermutation(uint8_t arr[]) {
 }
 
 /**
-uint8_t ffunction(uint8_t r[]) {
+uint8_t ffunction(uint8_t r[], uint8_t key[]) {
   // 32-bit input -> Expansion permutation -> 48-bit output
-  // expandedArray = expansionPermutation(r);    
+  // expandedArray = expansionPermutation(r);  
+  // 48-bit inputs -> XOR -> 48-bit output
+  // xoredArray = XOR(expandedArray, key)
   // 48-bit input -> S-Box -> 32-bit output
-  // sBox = sBox(expandedArray)
+  // sBox = sBox(xoredArray)
   // 32-bit input -> P-Box permutation -> 32-bit output  
   // finalArray = pboxPermutation(sBox)
   // return finalArray
