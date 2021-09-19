@@ -2,6 +2,10 @@
 #include <cstdint>
 #include <cstring>
 #include <sstream>
+/**
+#include <bitset>
+// Use for debugging output in sets of 8 (I ordered every table below row-wise in sets of 8 as well)
+**/
 
 // Include guards:
 #ifndef FFUNCTION_H
@@ -184,33 +188,33 @@ const uint8_t pboxPermutationTable[32] = {
 
 std::string convertDecimalToBinary(int decimal)
 {
-    std::string binary;
-    while(decimal != 0) 
-    {
-      binary = (decimal % 2 == 0 ? "0" : "1") + binary; 
-      decimal = decimal / 2;
-    }
-    while(binary.length() < 4)
-    {
-      binary = "0" + binary;
-    }
-    return binary;
-    // For printing, use cout or string.c_str()
+  std::string binary;
+  while(decimal != 0) 
+  {
+    binary = (decimal % 2 == 0 ? "0" : "1") + binary; 
+    decimal = decimal / 2;
+  }
+  while(binary.length() < 4)
+  {
+    binary = "0" + binary;
+  }
+  return binary;
+  // For printing, use std::cout or std::string.c_str()
 }
 
 int convertBinaryToDecimal(std::string binary)
 {
-    int decimal = 0, counter = 0;
-    int size = binary.length();
-    for(int i = size - 1; i >= 0; i--)
+  int decimal = 0, counter = 0;
+  int size = binary.length();
+  for(int i = size - 1; i >= 0; i--)
+  {
+    if(binary[i] == '1') 
     {
-      if(binary[i] == '1') 
-      {
-        decimal += counter * counter;
-      }
-      counter++;
+      decimal += counter * counter;
     }
-    return decimal;
+    counter++;
+  }
+  return decimal;
 }
 
 uint8_t expansionPermutation(uint8_t arr[]) {      
@@ -218,7 +222,7 @@ uint8_t expansionPermutation(uint8_t arr[]) {
   expandedArray = (uint8_t *) malloc(sizeof(expansionPermutationTable) * sizeof(uint8_t));
   for(int i = 0; i < sizeof(expansionPermutationTable); i++)
   {
-    expandedArray[i] = arr[expansionPermutationTable[i]-1];
+    expandedArray[i] = arr[expansionPermutationTable[i] - 1];
   }   
   return expandedArray;
 }
@@ -247,15 +251,17 @@ uint8_t sBoxSubstitution(uint8_t arr[]) {
     int convertedRow = convertBinaryToDecimal(row);
     // Concatenating the middle 4 bits from a set of 6 to obtain the column:
     std::string col = expandedString.substr(i * 6 + 1, 1) + expandedString.substr(i * 6 + 2, 1) + expandedString.substr(i * 6 + 3, 1) + expandedString.substr(i * 6 + 4, 1);
-		int convertedCol = convertBinaryToDecimal(col);
-		int resultantValue = substition_boxes[i][convertedRow][convertedCol];
-		substitutedArray += convertDecimalToBinary(resultantValue);  
+    int convertedCol = convertBinaryToDecimal(col);
+    int resultantValue = substition_boxes[i][convertedRow][convertedCol];
+    substitutedArray += convertDecimalToBinary(resultantValue);  
   }
-  // Convert std::string back to uint8_t array
-  return substitutedArray;
-}
-
-std::string key_string = convert.str();
+  uint8_t finalSubstitutedArray[32];
+  for (int i = 0; i < 32; i++)
+  {
+    finalSubstitutedArray[i] = static_cast<uint8_t>(substitutedArray[i] - '0');
+    // std::cout << bitset<8>(finalSubstitutedArray[i]) << std::endl;
+  }	
+  return finalSubstitutedArray;
 }
 
 uint8_t pboxPermutation(uint8_t arr[]) {
@@ -263,7 +269,7 @@ uint8_t pboxPermutation(uint8_t arr[]) {
   permutedArray = (uint8_t *) malloc(sizeof(pboxPermutationTable) * sizeof(uint8_t));
   for(int i = 0; i < sizeof(pboxPermutationTable); i++)
   {
-    permutedArray[i] = arr[pboxPermutationTable[i]-1];
+    permutedArray[i] = arr[pboxPermutationTable[i] - 1];
   }   
   return permutedArray;
 }
