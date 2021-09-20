@@ -293,9 +293,8 @@ uint8_t* XOR(uint8_t *arr, uint8_t *key) {
   return arr;      
 }        
 
-// a = a >> 1;
-
 uint8_t* sBoxSubstitution(uint8_t *arr) {
+  /**
   // Convert uint8_t array into a string: (using ostringstream from sstream)
   std::ostringstream convert;
   for (int i = 0; i < 48; i++) 
@@ -322,6 +321,21 @@ uint8_t* sBoxSubstitution(uint8_t *arr) {
     // std::cout << bitset<8>(finalSubstitutedArray[i]) << std::endl;
   }	
   return finalSubstitutedArray;
+  **/
+  
+  // New implementation:
+  // Divide the 48-bit/6-byte array into 8 parts of 6 bits each 
+  // (preferably omitting the MSB and the second MSB for a 1 byte array, emplacing the remaining 6 bits from right)
+  // Run the old loop -> for(int i = 0; i < 8; i++)
+  // Get row by hardcoded control statements (if):
+  // if(arr[0] & 20 == 0 && arr[5] & 01 == 0) -> row = 0
+  // else if(arr[0] & 20 == 0 && arr[5] & 01 == 1) -> row = 1
+  // else if(arr[0] & 20 == 1 && arr[5] & 01 == 0) -> row = 2
+  // else if(arr[0] & 20 == 1 && arr[5] & 01 == 1) -> row = 3
+  // Get column next:
+  // middleFourBits = middleFourBits >> 1; 
+  // col = middleFourBits & 0x0F;
+  // sbox value -> [i][row][col]
 }
 
 uint8_t* pboxPermutation(uint8_t *arr) {
