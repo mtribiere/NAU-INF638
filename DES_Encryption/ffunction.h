@@ -1,9 +1,8 @@
-// Include the header below for using uint8_t - discard/remove if you're using in another import or header file.
+/**
 #include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <sstream>
-/**
 #include <algorithm>
 // Use for copying array data, in case required:
 // std::copy(std::begin(arr1), std::end(arr1), std::begin(arr2));
@@ -156,6 +155,23 @@ const uint8_t sboxTableHex[256] PROGMEM = {
   0x21, 0xE7, 0x4A, 0x8D, 0xFC, 0x90, 0x35, 0x6B
 };	
 
+const uint8_t expansionPermutationTable[48] = {
+        32, 1, 2, 3, 4, 5, 4, 5, 
+        6, 7, 8, 9, 8, 9, 10, 11,
+        12, 13, 12, 13, 14, 15, 16, 17, 
+        16, 17, 18, 19, 20, 21, 20, 21,
+        22, 23, 24, 25, 24, 25, 26, 27, 
+        28, 29, 28, 29, 30, 31, 32, 1
+};
+
+const uint8_t pboxPermutationTable[32] = {
+        16, 7, 20, 21, 29, 12, 28, 17, 
+        1, 15, 23, 26, 5, 18, 31, 10,
+        2, 8, 24, 14, 32, 27, 3, 9, 
+        19, 13, 30, 6, 22, 11, 4, 25
+};
+
+/**
 const uint8_t pc1Table[56] = {
         57, 49, 41, 33, 25, 17, 9, 1,
         58, 50, 42, 34, 26, 18, 10, 2,
@@ -172,22 +188,6 @@ const uint8_t pc2Table[48] = {
         41, 52, 31, 37, 47, 55, 30, 40, 
         51, 45, 33, 48, 44, 49, 39, 56, 
         34, 53, 46, 42, 50, 36, 29, 32
-};
-
-const uint8_t expansionPermutationTable[48] = {
-        32, 1, 2, 3, 4, 5, 4, 5, 
-        6, 7, 8, 9, 8, 9, 10, 11,
-        12, 13, 12, 13, 14, 15, 16, 17, 
-        16, 17, 18, 19, 20, 21, 20, 21,
-        22, 23, 24, 25, 24, 25, 26, 27, 
-        28, 29, 28, 29, 30, 31, 32, 1
-};
-
-const uint8_t pboxPermutationTable[32] = {
-        16, 7, 20, 21, 29, 12, 28, 17, 
-        1, 15, 23, 26, 5, 18, 31, 10,
-        2, 8, 24, 14, 32, 27, 3, 9, 
-        19, 13, 30, 6, 22, 11, 4, 25
 };
 
 std::string convertDecimalToBinary(int decimal)
@@ -221,6 +221,22 @@ int convertBinaryToDecimal(std::string binary)
   return decimal;
 }
 
+int* sBoxDecimalToBinary(int n)
+{   int *arr;
+    arr = (int *) malloc(4 * sizeof(int));
+    // For decimals that can be represented in binary with 4 bits: i.e. 0 to 15 for the S-Box.
+    for (int i = 3, j = 0; i >= 0, j < 4; i--, j++) 
+    {
+        int k = n >> i;
+        if (k & 1)
+            arr[j] = 1;
+        else
+            arr[j] = 0;
+    }
+    return arr;
+}
+**/
+
 int binaryToDecimal(int num)
 {
     int decimal = 0;
@@ -236,33 +252,26 @@ int binaryToDecimal(int num)
     return decimal;
 }
 
-int* sBoxDecimalToBinary(int n)
-{   int *arr;
-    arr = (int *) malloc(4 * sizeof(int));
-    // For decimals that can be represented in binary with 4 bits: i.e. 0 to 15 for the S-Box.
-    for (int i = 3, j = 0; i >= 0, j < 4; i--, j++) 
-    {
-        int k = n >> i;
-        if (k & 1)
-            arr[j] = 1;
-        else
-            arr[j] = 0;
-    }
-    return arr;
+int pow(int a, int b)
+{
+    if(b)
+        return a*pow(a, b - 1);
+    else
+        return 1;
 }
 
 int decimalToBinary(int num)
 {
     int binary = 0;
     int count = 0;
-    while (num != 0) {
+    while (num != 0) 
+    {
         int remainder = num % 2;
-        int c = pow(10, count);
-        binary += remainder * c;
+        int tensmultiple = pow(10, count);
+        binary += remainder * tensmultiple;
         num /= 2;
         count++;
     }
- 
     return binary;
 }
 
@@ -283,6 +292,8 @@ uint8_t* XOR(uint8_t *arr, uint8_t *key) {
   }        
   return arr;      
 }        
+
+// a = a >> 1;
 
 uint8_t* sBoxSubstitution(uint8_t *arr) {
   // Convert uint8_t array into a string: (using ostringstream from sstream)
