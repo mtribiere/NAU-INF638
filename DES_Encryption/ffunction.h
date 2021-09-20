@@ -1,4 +1,5 @@
 // Include the header below for using uint8_t - discard/remove if you're using in another import or header file.
+#include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <sstream>
@@ -218,6 +219,51 @@ int convertBinaryToDecimal(std::string binary)
     counter++;
   }
   return decimal;
+}
+
+int binaryToDecimal(int num)
+{
+    int decimal = 0;
+    int base = 1;
+    int temp = num;
+    while (temp) 
+    {
+      int onesPlaceDigit = temp % 10;
+      temp = temp / 10;
+      decimal += onesPlaceDigit * base;
+      base = base * 2;
+    }
+    return decimal;
+}
+
+int* sBoxDecimalToBinary(int n)
+{   int *arr;
+    arr = (int *) malloc(4 * sizeof(int));
+    // For decimals that can be represented in binary with 4 bits: i.e. 0 to 15 for the S-Box.
+    for (int i = 3, j = 0; i >= 0, j < 4; i--, j++) 
+    {
+        int k = n >> i;
+        if (k & 1)
+            arr[j] = 1;
+        else
+            arr[j] = 0;
+    }
+    return arr;
+}
+
+int decimalToBinary(int num)
+{
+    int binary = 0;
+    int count = 0;
+    while (num != 0) {
+        int remainder = num % 2;
+        int c = pow(10, count);
+        binary += remainder * c;
+        num /= 2;
+        count++;
+    }
+ 
+    return binary;
 }
 
 uint8_t* expansionPermutation(uint8_t *arr) {      
