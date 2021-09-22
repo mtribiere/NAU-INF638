@@ -2,16 +2,12 @@
 
 uint8_t* expansionPermutation(uint8_t arr[]) {
   uint8_t *expandedArray = (u_int8_t *) malloc (6);
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 6; i++) {
     expandedArray[i] = 0;
   }
 
   permutate_array(arr, expandedArray, 48, expansionPermutationTable);
   return expandedArray;
-}
-
-uint8_t* XOR(uint8_t *arr, uint8_t *key) {
-  return arr;
 }
 
 uint8_t* sBoxSubstitution(uint8_t *arr) {
@@ -73,7 +69,7 @@ uint8_t* sBoxSubstitution(uint8_t *arr) {
   return sBoxArray;
 }
 
-u_int8_t* pboxPermutation(uint8_t *arr) {
+u_int8_t* pBoxPermutation(uint8_t *arr) {
   u_int8_t *permutatedArray = (u_int8_t *) malloc (4);
   for (int i = 0; i < 4; i++) {
     permutatedArray[i] = 0;
@@ -99,7 +95,7 @@ uint8_t* ffunction(uint8_t *r, uint8_t *key) {
   free(XORArray);
 
   // 32-bit input -> P-Box permutation -> 32-bit output
-  uint8_t* permutatedArray = pboxPermutation(substitutedArray);
+  uint8_t* permutatedArray = pBoxPermutation(substitutedArray);
   free(substitutedArray);
 
   return permutatedArray;
