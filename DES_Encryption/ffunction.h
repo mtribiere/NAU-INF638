@@ -3,9 +3,6 @@
 
 #include "operations.h"
 
-// Considering 32-bit input from Ri:
-uint8_t r[4] = {0xF0, 0xAA, 0xF0, 0xAA};
-uint8_t key[6] = {0x1B, 0x02, 0xEF, 0xFC, 0x70, 0x72};
 
 
 const uint8_t sboxTable[8][4][16] = {
@@ -65,7 +62,7 @@ uint8_t* expansionPermutation(uint8_t arr[]);
 
 uint8_t* sBoxSubstitution(uint8_t *arr);
 
-u_int8_t* pBoxPermutation(uint8_t *arr);
+uint8_t* pBoxPermutation(uint8_t *arr);
 
 uint8_t* ffunction(uint8_t *r, uint8_t *key);
 

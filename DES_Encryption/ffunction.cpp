@@ -1,7 +1,7 @@
 #include "ffunction.h"
 
 uint8_t* expansionPermutation(uint8_t arr[]) {
-  uint8_t *expandedArray = (u_int8_t *) malloc (6);
+  uint8_t *expandedArray = (uint8_t *) malloc (6);
   for (int i = 0; i < 6; i++) {
     expandedArray[i] = 0;
   }
@@ -11,19 +11,19 @@ uint8_t* expansionPermutation(uint8_t arr[]) {
 }
 
 uint8_t* sBoxSubstitution(uint8_t *arr) {
-  uint8_t *sBoxArray = (u_int8_t *) malloc (6);
+  uint8_t *sBoxArray = (uint8_t *) malloc (6);
 
-  u_int8_t byte_array1[8] = {252, 3, 15, 63, 252, 3, 15, 63};
-  u_int8_t byte_array2[8] = {0, 240, 192, 0, 0, 240, 192, 0};
+  uint8_t byte_array1[8] = {252, 3, 15, 63, 252, 3, 15, 63};
+  uint8_t byte_array2[8] = {0, 240, 192, 0, 0, 240, 192, 0};
   int8_t byte1_shifts[8] = {2, -4, -2, 0, 2, -4, -2, 0};
   int8_t byte2_shifts[8] = {0, 4, 6, 0, 0, 4, 6, 0};
-  u_int8_t key_array_idx[8] = {0, 0, 1, 2, 3, 3, 4, 5};
+  uint8_t key_array_idx[8] = {0, 0, 1, 2, 3, 3, 4, 5};
 
-  u_int8_t byte1 = 0;
-  u_int8_t byte2 = 0;
-  u_int8_t resByte = 0;
-  u_int8_t firstByte = 0;
-  u_int8_t secondByte = 0;
+  uint8_t byte1 = 0;
+  uint8_t byte2 = 0;
+  uint8_t resByte = 0;
+  uint8_t firstByte = 0;
+  uint8_t secondByte = 0;
   for (int i = 0; i < 8; i++) {
     firstByte = arr[key_array_idx[i]] & byte_array1[i];
     if (byte_array2[i] != 0) {
@@ -55,7 +55,7 @@ uint8_t* sBoxSubstitution(uint8_t *arr) {
     byte1 >>= 1;
     byte2 = (byte2 >> 4) | (byte2 & 0x01);
 
-    u_int8_t newValue = sboxTable[i][byte2][byte1];
+    uint8_t newValue = sboxTable[i][byte2][byte1];
 
     if ((i % 2) == 0) {
       newValue <<= 4;
@@ -69,8 +69,8 @@ uint8_t* sBoxSubstitution(uint8_t *arr) {
   return sBoxArray;
 }
 
-u_int8_t* pBoxPermutation(uint8_t *arr) {
-  u_int8_t *permutatedArray = (u_int8_t *) malloc (4);
+uint8_t* pBoxPermutation(uint8_t *arr) {
+  uint8_t *permutatedArray = (uint8_t *) malloc (4);
   for (int i = 0; i < 4; i++) {
     permutatedArray[i] = 0;
   }
@@ -84,7 +84,7 @@ uint8_t* ffunction(uint8_t *r, uint8_t *key) {
   uint8_t* expandedArray = expansionPermutation(r);
 
   // 48-bit inputs -> XOR -> 48-bit output
-  uint8_t *XORArray = (u_int8_t *) malloc (6);
+  uint8_t *XORArray = (uint8_t *) malloc (6);
   for (int i = 0; i < 6; i ++) {
     XORArray[i] = expandedArray[i] ^ key[i];
   }
@@ -100,8 +100,8 @@ uint8_t* ffunction(uint8_t *r, uint8_t *key) {
 
   return permutatedArray;
 }
-
+/*
 int main (int argc, char *argv[]) {
-  u_int8_t *output = ffunction(r, key);
+  uint8_t *output = ffunction(r, key);
   print_key_as_bits(output, 4);
-}
+}*/

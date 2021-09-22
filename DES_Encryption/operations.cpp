@@ -1,6 +1,6 @@
 #include "operations.h"
 
-void print_key_as_bits(u_int8_t *key, int length) {
+void print_key_as_bits(uint8_t *key, int length) {
   char char_to_print;
   for (int i = 0; i < length; i++)
   {
@@ -22,10 +22,10 @@ void print_key_as_bits(u_int8_t *key, int length) {
   printf("\n");
 }
 
-void permutate_array(u_int8_t *input_array, u_int8_t *output_array, u_int8_t length, const u_int8_t perm_box[]) {
-  u_int8_t desired_bit;
+void permutate_array(uint8_t *input_array, uint8_t *output_array, uint8_t length, const uint8_t perm_box[]) {
+  uint8_t desired_bit;
 
-  for (u_int8_t i = 0; i < length; i++) {
+  for (uint8_t i = 0; i < length; i++) {
     desired_bit = input_array[int(perm_box[i]/8)] & position[perm_box[i]%8];
 
     if (desired_bit != 0) {

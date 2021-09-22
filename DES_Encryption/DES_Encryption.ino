@@ -1,3 +1,10 @@
+#include "ffunction.h"
+#include "des_key_gen.h"
+
+// Considering 32-bit input from Ri:
+uint8_t r[4] = {0xF0, 0xAA, 0xF0, 0xAA};
+uint8_t key[6] = {0x1B, 0x02, 0xEF, 0xFC, 0x70, 0x72};
+
 //const char plaintext[] = "HelloDES!";
 const uint8_t plaintext[] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 
@@ -19,7 +26,6 @@ void setBitAtPosition(uint8_t *array, int position, int value){
 
   if(value){
     array[position/8] |= (0x80 >> position%8);
-    Serial.println("Putting 1");
   }else{
     array[position/8] &= ~(0x80 >> position%8);
   }
@@ -41,22 +47,43 @@ void permutation(const uint8_t *table, const uint8_t *input, uint8_t *output, in
 void setup() {
   Serial.begin(9600);
   
-  /////////////////////////Initial permutation
+  //Initial permutation
   uint8_t tempPerm[8];
   permutation(ip_permtab, plaintext, tempPerm, 64);
 
   memcpy(Ln, tempPerm, 4);
   memcpy(Rn, tempPerm+4, 4);
-  
-  Serial.println("Ln :");
+
+  for(int i = 0;i < 16;i++){
+    
+    Serial.print("Round");
+    Serial.println(i);
+    
+    //Exexute f function
+    uint8_t *tmpKey = generate_key(key,i);
+    uint8_t *result = malloc(sizeof(uint8_t) * 4);
+    result = ffunction(Rn,tmpKey);
+
+    //Apply XOR
+    for(int j = 0;j<4;j++)
+      result[j] = result[j] ^ Ln[j];
+
+    //Switch results
+    memcpy(Ln,Rn,4);
+    memcpy(Rn, result, 4);
+    
+    //Clean memory
+    free(result);
+    free(tmpKey);
+
+  }
+
   for(int i = 0;i<4;i++){
     Serial.println(Ln[i]);
   }
+
+
   
-  Serial.println("Rn :");
-  for(int i = 0;i<4;i++){
-    Serial.println(Rn[i]);
-  }
   
   //////////////////////////////CODE HERE
   
