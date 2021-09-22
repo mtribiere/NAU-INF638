@@ -55,7 +55,7 @@ uint8_t* sBoxSubstitution(uint8_t *arr) {
     byte1 >>= 1;
     byte2 = (byte2 >> 4) | (byte2 & 0x01);
 
-    uint8_t newValue = sboxTable[i][byte2][byte1];
+    uint8_t newValue = pgm_read_byte(&sboxTable[i][byte2][byte1]);
 
     if ((i % 2) == 0) {
       newValue <<= 4;
