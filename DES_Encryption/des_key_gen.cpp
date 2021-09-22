@@ -78,7 +78,7 @@ uint8_t * generate_key(uint8_t key[], uint8_t round) {
 
   return new_key;
 }
-
+/*
 int main (int argc, char *argv[]) {
   uint8_t round = 1;
   uint8_t initial_key[8] = {0x1B, 0x02, 0xEF, 0xFC, 0x70, 0x72, 0xF5, 0x10};
@@ -91,4 +91,4 @@ int main (int argc, char *argv[]) {
   print_key_as_bits(new_key, 6);
 
   free(new_key);
-}
+}*/
