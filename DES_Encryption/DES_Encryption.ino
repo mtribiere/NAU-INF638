@@ -18,6 +18,17 @@ const uint8_t ip_permtab[] = {
         61, 53, 45, 37, 29, 21, 13, 5,
         63, 55, 47, 39, 31, 23, 15, 7
 };
+const uint8_t final_permtab[] = {                                         /* 64 bit -> 64 bit */
+        40, 8, 48, 16, 56, 24, 64, 32,
+        39, 7, 47, 15, 55, 23, 63, 31,
+        38, 6, 46, 14, 54, 22, 62, 30,
+        37, 5, 45, 13, 53, 21, 61, 29,
+        36, 4, 44, 12, 52, 20, 60, 28,
+        35, 3, 43, 11, 51, 19, 59, 27,
+        34, 2, 42, 10, 50, 18, 58, 26,
+        33, 1, 41,  9, 49, 17, 57, 25
+};
+
 
 uint8_t Ln[4];
 uint8_t Rn[4];
@@ -54,13 +65,14 @@ void setup() {
   memcpy(Ln, tempPerm, 4);
   memcpy(Rn, tempPerm+4, 4);
 
+  //Make 16 rounds
   for(int i = 0;i < 16;i++){
     
     Serial.print("Round");
-    Serial.println(i);
+    Serial.println(i+1);
     
     //Exexute f function
-    uint8_t *tmpKey = generate_key(key,i);
+    uint8_t *tmpKey = generate_key(key,i+1);
     uint8_t *result = malloc(sizeof(uint8_t) * 4);
     result = ffunction(Rn,tmpKey);
 
@@ -78,11 +90,21 @@ void setup() {
 
   }
 
-  for(int i = 0;i<4;i++){
-    Serial.println(Ln[i]);
-  }
+  //Final permutation
+  uint8_t roundResult[4];
+  uint8_t finalResult[4];
 
+  memcpy(roundResult,Ln,4);
+  memcpy(roundResult+4,Rn,4);
 
+  permutation(final_permtab, roundResult, finalResult, 64);
+
+   for(int i = 0;i<8;i++){
+    Serial.print(finalResult[i]);
+    Serial.print(" ");
+   }
+
+   Serial.println();
   
   
   //////////////////////////////CODE HERE
