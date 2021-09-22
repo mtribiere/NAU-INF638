@@ -3,12 +3,12 @@
 
 // Considering 32-bit input from Ri:
 uint8_t r[4] = {0xF0, 0xAA, 0xF0, 0xAA};
-uint8_t key[6] = {0x1B, 0x02, 0xEF, 0xFC, 0x70, 0x72};
+uint8_t key[6] = {0x1B, 0x02, 0xEF, 0xFC, 0x70, 0x72, 0xF5, 0x10};
 
 //const char plaintext[] = "HelloDES!";
 const uint8_t plaintext[] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 
-const uint8_t ip_permtab[] = {                               
+const uint8_t ip_permtab[] = {
         58, 50, 42, 34, 26, 18, 10, 2,
         60, 52, 44, 36, 28, 20, 12, 4,
         62, 54, 46, 38, 30, 22, 14, 6,
@@ -51,13 +51,13 @@ void permutation(const uint8_t *table, const uint8_t *input, uint8_t *output, in
 
     for(int i = 0;i<outputSize;i++)
       setBitAtPosition(output, i, getBitAtPosition(input,table[i]-1)); //Because FUCKING offset
-    
-     
+
+
 }
 
 void setup() {
   Serial.begin(9600);
-  
+
   //Initial permutation
   uint8_t tempPerm[8];
   permutation(ip_permtab, plaintext, tempPerm, 64);
@@ -67,10 +67,10 @@ void setup() {
 
   //Make 16 rounds
   for(int i = 0;i < 16;i++){
-    
+
     Serial.print("Round");
     Serial.println(i+1);
-    
+
     //Exexute f function
     uint8_t *tmpKey = generate_key(key,i+1);
     uint8_t *result = malloc(sizeof(uint8_t) * 4);
@@ -83,7 +83,7 @@ void setup() {
     //Switch results
     memcpy(Ln,Rn,4);
     memcpy(Rn, result, 4);
-    
+
     //Clean memory
     free(result);
     free(tmpKey);
@@ -105,10 +105,10 @@ void setup() {
    }
 
    Serial.println();
-  
-  
+
+
   //////////////////////////////CODE HERE
-  
+
 
 }
 
