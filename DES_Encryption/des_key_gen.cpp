@@ -25,6 +25,11 @@ uint8_t * generate_key(uint8_t key[], uint8_t round) {
   uint8_t *C0 = (uint8_t *) malloc (4);
   uint8_t *D0 = (uint8_t *) malloc (4);
 
+  for (int i = 0; i < 4; i++) {
+    C0[i] = 0;
+    D0[i] = 0;
+  }
+
   permutate_array(key, C0, 28, key_perm_C0);
   permutate_array(key, D0, 28, key_perm_D0);
 
@@ -63,17 +68,20 @@ uint8_t * generate_key(uint8_t key[], uint8_t round) {
   free(Ci);
   free(Di);
 
-  uint8_t * new_key = (uint8_t *) malloc (48);
+  uint8_t * new_key = (uint8_t *) malloc (6);
+  for (int i = 0; i < 6; i++) {
+    new_key[i] = 0;
+  }
   permutate_array(cd_array, new_key, 48, key_perm_box_2);
 
   free(cd_array);
 
   return new_key;
 }
-/*
+
 int main (int argc, char *argv[]) {
-  uint8_t round = 10;
-  uint8_t initial_key[8] = {'B', 'a', 'N', 'A', 'n', 'a', '6', '4'};
+  uint8_t round = 1;
+  uint8_t initial_key[8] = {0x1B, 0x02, 0xEF, 0xFC, 0x70, 0x72, 0xF5, 0x10};
 
   print_key_as_bits(initial_key, 8);
 
@@ -83,4 +91,4 @@ int main (int argc, char *argv[]) {
   print_key_as_bits(new_key, 6);
 
   free(new_key);
-}*/
+}
