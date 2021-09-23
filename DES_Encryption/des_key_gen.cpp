@@ -12,7 +12,7 @@ uint8_t * left_bit_shift(uint8_t *key, int length, int shift) {
     bits1 = shifted_array[i] & 0xFF;
     shifted_array[i] <<= shift;
     shifted_array[i] |= bits2 >> (8 - shift);
-    if ((i == length - 1) & (shifted_array[i] & 0x07)) {
+    if ((i == length - 1) && (shifted_array[i] & 0x07)) {
       shifted_array[i] |= shifted_array[i] << 4;
       shifted_array[i] &= 240;
     }
