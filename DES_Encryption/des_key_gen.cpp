@@ -51,6 +51,9 @@ uint8_t * generate_key(uint8_t key[], uint8_t round) {
   }
 
   uint8_t * cd_array = (uint8_t *) malloc (7);
+  for (int i = 0; i < 7; i++) {
+    cd_array[i] = 0;
+  }
 
   for (uint8_t j = 0; j < 7; j++) {
     if (j < 3) {

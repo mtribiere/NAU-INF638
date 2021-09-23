@@ -1,8 +1,7 @@
 
 #include "des.h"
 
-uint8_t plaintext[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-uint8_t original_key[8] = {0x13, 0x34, 0x57, 0x79, 0x9B, 0xBC, 0xDF, 0xF1};
+
 
 uint8_t *desEncryption(uint8_t *plaintext, uint8_t *original_key) {
   uint8_t Ln[4];
@@ -28,10 +27,13 @@ uint8_t *desEncryption(uint8_t *plaintext, uint8_t *original_key) {
     key = generate_key(original_key, i);
 
     ffunction_res = ffunction(Rn, key);
+    free(key);
 
     for (int j = 0; j < 4; j++) {
       Rn[j] = Ln[j] ^ ffunction_res[j];
     }
+    
+    free(ffunction_res);
     memcpy(Ln, Rn_prev, 4);
   }
 
@@ -72,10 +74,13 @@ uint8_t * desDecryption(uint8_t *cyphertext, uint8_t *original_key) {
     key = generate_key(original_key, i);
 
     ffunction_res = ffunction(Rn, key);
-
+    free(key);
+    
     for (int j = 0; j < 4; j++) {
       Rn[j] = Ln[j] ^ ffunction_res[j];
     }
+    
+    free(ffunction_res);
     memcpy(Ln, Rn_prev, 4);
   }
 
@@ -104,6 +109,8 @@ int main(int argc, char const *argv[]) {
     printf("%c", decrypted_plaintext[i]);
   }
   printf("\n");
+  
+  free(cyphertext);
+  free(decrypted_plaintext);
   return 0;
-}
-*/
+}*/

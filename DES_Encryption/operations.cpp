@@ -23,7 +23,7 @@ void print_key_as_bits(uint8_t *key, int length) {
 }
 
 void permutate_array(uint8_t *input_array, uint8_t *output_array, uint8_t length, const uint8_t perm_box[]) {
-  uint8_t desired_bit;
+  uint8_t desired_bit = 0;
 
   for (uint8_t i = 0; i < length; i++) {
     desired_bit = input_array[int(perm_box[i]/8)] & position[perm_box[i]%8];

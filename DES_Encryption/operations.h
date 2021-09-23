@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+ #include <stdint.h>
 
 const uint8_t position[8] = {128, 64, 32, 16, 8, 4, 2, 1};
 
